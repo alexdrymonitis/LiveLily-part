@@ -1666,31 +1666,60 @@ vector<string> ofApp::tokenizeChord(string input, bool includeAngleBrackets)
 }
 
 //--------------------------------------------------------------
+vector<string> ofApp::tokenizeMelodicLine(const string& input)
+{
+	bool isString = false;
+	bool isChord = false;
+	int quotesCounter = 0;
+	vector<string> tokens;
+	string token;
+	for (size_t i = 0; i < input.size(); i++) {
+		if (isspace(input[i])) {
+			if (!token.empty()) {
+				if (!isString && !isChord) {
+					tokens.push_back(token);
+					token.clear();
+				}
+				else {
+					token += input[i];
+				}
+			}
+		}
+		else if (input[i] == '{' || input[i] == '}') {
+			if (!token.empty() && !isString) {
+				tokens.push_back(token);
+				token.clear();
+			}
+			tokens.emplace_back(1, input[i]);
+		}
+		else {
+			token += input[i];
+			if (input[i] == '"') {
+				quotesCounter++;
+				if (quotesCounter == 1) {
+					isString = true;
+				}
+				else {
+					isString = false;
+					quotesCounter = 0;
+				}
+			}
+			else if (input[i] == '<' && (i < input.size()-1 && !isspace(input[i+1]))) {
+				isChord = true;
+			}
+			else if (input[i] == '>') {
+				isChord = false;
+			}
+		}
+	}
+	if (!token.empty()) tokens.push_back(token);
+	return tokens;
+}
+
+//--------------------------------------------------------------
 std::pair<int, string> ofApp::parseMelodicLine(string str)
 {
-	//if (!areBracketsBalanced(str)) {
-	//	return std::make_pair(3, "brackets are not balanced");
-	//}
-	//if (!areParenthesesBalanced(str)) {
-	//	return std::make_pair(3, "parentheses are not balanced");
-	//}
-	//bool parsingBarsFromLoop = false;
-	//int ndx;
-	//string parsingBarsFromLoopName;
-	//if (parsingBars && startsWith(str, "\\") && str.find("|") == string::npos) {
-	//	if (barsIndexes.find(str) == barsIndexes.end()) {
-	//		if (loopsIndexes.find(str) != loopsIndexes.end()) {
-	//			parsingBarsFromLoop = true;
-	//			parsingBarsFromLoopName = str;
-	//		}
-	//		else {
-	//			return std::make_pair(3, (string)"bar/loop " + str + (string)" doesn't exist");
-	//		}
-	//	}
-	//}
-	//size_t strBegin, strLen;
-	//string strToProcess = detectRepetitions(str);
-	vector<string> tokens = tokenizeString(str, " ");
+	vector<string> tokens = tokenizeMelodicLine(str);
 	int barIndex = getLastLoopIndex();
 	int tempDur = 0;
 	// the following array is used to map the dynamic values

@@ -73,6 +73,7 @@ class ofApp : public ofBaseApp
 		void stripLineFromBar(string str);
 		void parseBarLoop(string str);
 		vector<string> tokenizeChord(string input, bool includeAngleBrackets = false);
+		vector<string> tokenizeMelodicLine(const string& input);
 		std::pair<int, string> parseMelodicLine(string str);
 		// initialize an instrument
 		void initializeInstrument(int index, string instName);
