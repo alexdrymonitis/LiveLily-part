@@ -8,7 +8,9 @@
 #   The location of your root openFrameworks installation
 #       (default) OF_ROOT = ../../.. 
 ################################################################################
-OF_ROOT = ../../..
+# where openFrameworks is: set OF_ROOT in config.local.make (not in the repository) when LiveLily-part isn't in OF_ROOT/apps/myApps
+-include config.local.make
+OF_ROOT ?= ../../..
 
 ################################################################################
 # PROJECT ROOT

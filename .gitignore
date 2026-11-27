@@ -1,0 +1,16 @@
+# build output of openFrameworks
+/obj/
+/bin/livelily_part
+/bin/livelily_part_debug
+/bin/*.so
+/bin/data/
+/make_sources.txt
+
+# where openFrameworks is on this machine (see config.make)
+/config.local.make
+
+# editor and IDE files
+*~
+*.swp
+*.qbs.user
+.qtc_clangd/
